@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-with open("i1a.txt") as file:
+with open("inputs/i1a.txt") as file:
     lines = file.readlines()
 
 c = 0
@@ -15,7 +15,7 @@ for l in lines:
 print(max(elves))
 
 
-with open("i1b.txt") as file:
+with open("inputs/i1b.txt") as file:
     lines = file.readlines()
 
 c = 0
