@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-#Parsing-lazy
+# Very lazy, hardcoding puzzle inputs
 stacks = {}
 stacks[1] = ["J","H","G","M","Z","N","T","F"]
 stacks[2] = ["V","W","J"]
@@ -12,6 +12,7 @@ stacks[7] = ["D","H","G","M","R"]
 stacks[8] = ["H","N","M","V","Z","D"]
 stacks[9] = ["G","N","F","H"]
 
+# Input modified to only contain move lines
 with open("inputs/i5a.txt") as file:
     lines = file.readlines()
 for l in lines:
@@ -39,6 +40,7 @@ with open("inputs/i5a.txt") as file:
 for l in lines:
     word = l.split()
     move, fr, to = int(word[1]),int(word[3]),int(word[5])
+    # Appending then poping from temp equals to moving crates in order
     temp = []
     for i in range(move):
         temp.append(stacks[fr].pop())
