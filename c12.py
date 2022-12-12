@@ -2,16 +2,16 @@
 with open("inputs/i12a.txt") as file:
     lines = file.read().splitlines()
 
-# Forest contains the parsed input
 map = []
 heat = []
-m = []
-h = []
 backlog = {}
 backlog2 = {}
 
 start = 0,0
 end = 0,0
+
+m = []
+h = []
 
 y = 0
 for l in lines:
