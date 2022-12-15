@@ -2,9 +2,6 @@
 import multiprocessing
 import functools
 
-with open("inputs/i15a.txt") as file:
-    lines = file.read().splitlines()
-
 sensor = {}
 beacon = []
 
@@ -20,6 +17,12 @@ def inrange(x,y):
             return s
     return False
 
+sensor = {}
+beacon = []
+
+with open("inputs/i15a.txt") as file:
+    lines = file.read().splitlines()
+
 for l in lines:
     l = l.replace("Sensor at ","").replace(" closest beacon is at ","")
     l = l.replace(" ","").replace("x=","").replace("y=","").replace(":",",").split(",")
@@ -27,42 +30,45 @@ for l in lines:
     sensor[(x,y)]=mdist(x,y,u,v)
     beacon.append((u,v))
 
-b1 = [ k[0]-v for k,v in sensor.items() ]
-b2 = [ k[0]+v for k,v in sensor.items() ]
-xmin,xmax = min(b1),max(b2)
-
-y = 2000000
-counter = 0
-closes = {}
-
-for s in sensor.items():
-    if mdist(s[0][0],y,s[0][0],s[0][1]) <= s[1]:
-        closes[(s[0][0],s[0][1])]=s[1]
-s=sensor
-sensor = closes
-for x in range(xmin-10,xmax+10):
-    if inrange(x,y) and (x,y) not in beacon:
-        counter +=1
-
-print("Part 1",counter)
-sensor = s
-
-def run(start):
-    print("Processing from ",start)
-    for y in range(start,start+100000):
+def scanrange(start):
+    slice = 200000
+    print("🆕 Processing",start,start+slice)
+    for y in range(start,start+slice):
         x = 0
-        if y%10000 == 0:
-            print(y)
         while(x<4000001):
             if inrange(x,y):
                 s = inrange(x,y)
                 x += s[1]-mdist(x,y,s[0][0],s[0][1])
             elif (not (inrange(x,y))) and (x,y) not in beacon:
-                print("Part 2",x,y,(x*4000000+y))
-                exit()
+                return x,y,x*4000000+y
             x+=1
+    print("✅ Completed",start,start+slice)
+    return 0
 
-run(3200000)
-#Found after bruteforce that
-#Part 2 3340224 3249595 13360899249595
-#Trying to optimize now
+if __name__ == "__main__":
+
+    b1 = [ k[0]-v for k,v in sensor.items() ]
+    b2 = [ k[0]+v for k,v in sensor.items() ]
+    xmin,xmax = min(b1),max(b2)
+
+    y = 2000000
+    counter = 0
+
+    for x in range(xmin-10,xmax+10):
+        if inrange(x,y) and (x,y) not in beacon:
+            counter +=1
+
+    print("🎉 Part 1",counter)
+
+    pool = multiprocessing.Pool(multiprocessing.cpu_count()-1)
+    # Starting from 4M as I know that the result is closer ;)
+    # But you could start from 0 and go incremental instead
+    # Doing chuncks of 200k
+    ans = pool.imap_unordered(scanrange, range(3800000, -1, -200000))
+    # imap_unordered allows to get access to the answers as soon as available
+    # but not in the initial order of jobs (we do not care of order here)
+    for a in ans:
+        if a!=0:
+            print("🎉 Part 2",a[0],a[1],a[2])
+            # Calling exit() to stop burning CPU on other tasks
+            exit()
