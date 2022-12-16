@@ -97,12 +97,13 @@ def maxremain(vs,t):
         a+=v2[v]
     return a*(t-1)
 
+@functools.cache
 def explore2(s1,s2,t1,t2,done2,currentscore):
     global maxscore
     if t1<t2:
         return explore2(s2,s1,t2,t1,done2,currentscore)
     if currentscore+maxremain(done2,t1) < maxscore:
-        return currentscore,done2
+        return 0,""
     done = split2(done2)
     if len(done) == nbvalves:
         return currentscore,done2
