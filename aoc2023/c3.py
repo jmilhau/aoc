@@ -38,3 +38,21 @@ while i < len(s):
     j = 0
     i+=1
 print(answer)
+
+def findnumbers(i,j):
+    
+    return []
+
+i,j,answer2 = 0,0,0
+while i < len(s):
+    while j < len(s[i]):
+        if s[i][j]=="*":
+            found = findnumbers(i,j)
+            if found == []:
+                print("WONT KEEP Line {} value {} ".format(i,j))
+            else:
+                answer2 += sum(found)
+        j+=1
+    j = 0
+    i+=1
+print(answer2)
