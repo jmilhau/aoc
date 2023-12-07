@@ -39,20 +39,41 @@ while i < len(s):
     i+=1
 print(answer)
 
+def readnumber(i,savej):
+    if not s[i][savej].isnumeric():
+        return None
+    j = savej
+    while s[i][j].isnumeric():
+        j+=1
+    return int(s[i][savej:j])
+
+def backtrack(i,j):
+    if not s[i][j].isnumeric():
+        return None
+    y = j-1
+    while s[i][y].isnumeric():
+        y -= 1
+    return (i,y+1)
+
 def findnumbers(i,j):
-    
-    return []
+    a = set()
+    for x,y in [(i-1,j-1),(i-1,j),(i-1,j+1),(i,j-1),(i,j+1),(i+1,j-1),(i+1,j),(i+1,j+1)]:
+        t =  backtrack(x,y)
+        if t is not None:
+            a.add(t)
+    return list(a)
+
 
 i,j,answer2 = 0,0,0
 while i < len(s):
     while j < len(s[i]):
         if s[i][j]=="*":
             found = findnumbers(i,j)
-            if found == []:
-                print("WONT KEEP Line {} value {} ".format(i,j))
-            else:
-                answer2 += sum(found)
+            if len(found) == 2:
+                t = readnumber(*found[0]) * readnumber(*found[1])
+                answer2 += t
         j+=1
     j = 0
     i+=1
 print(answer2)
+
